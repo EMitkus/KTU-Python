@@ -1,8 +1,8 @@
-torch==2.0.1  # PyTorch biblioteka, naudojama CNN modelių kūrimui ir treniravimui
-torchvision==0.15.2  # PyTorch priedas, skirtas vaizdų apdorojimo funkcijoms, pvz., transformacijoms ir iš anksto apmokytiems modeliams
-torchmetrics==1.0.0  # Priedas PyTorch, skirtas tikslumo, prisiminimo, precizijos ir kitų metrikų skaičiavimui
-mysql-connector-python==8.0.32  # MySQL duomenų bazės prijungimo biblioteka, naudojama duomenų įkėlimui ir išsaugojimui
-matplotlib==3.7.1  # Biblioteka grafinių vizualizacijų kūrimui, naudojama nuostolių ir metrikų vaizdavimui
-numpy==1.23.5  # Skaitmeninių duomenų apdorojimo biblioteka, naudojama TensorFlow ir PyTorch duomenų paruošimui
-tensorflow==2.12.0  # TensorFlow, naudojamas TensorFlow modelių kūrimui ir treniravimui, su GPU palaikymu (jei įdiegta TensorFlow-GPU)
-scikit-learn==1.2.2  # Duomenų apdorojimo ir analizės įrankių biblioteka, naudojama papildomoms metrikoms arba duomenų dalijimui
+torch==2.5.1+cu124  # PyTorch with CUDA 12.4 support
+torchvision          # TorchVision for image handling and pre-trained models
+torchmetrics         # Metrics for model evaluation
+tensorflow           # TensorFlow for additional model support
+mysql-connector-python  # For MySQL database handling
+matplotlib           # Visualization library for plotting graphs
+numpy                # NumPy for numerical computations
+scikit-learn         # For additional machine learning utilities

@@ -3,9 +3,8 @@ import tensorflow as tf
 from model import Net
 from data import save_to_mysql, load_from_mysql
 from utils import calculate_metrics, plot_losses
-from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
-from tensorflow_model import TensorFlowModel
+from model.tensorflow import TensorFlowModel
 
 # 1. Testuojamas PyTorch modelio sukūrimas
 print("Testuojamas PyTorch modelio sukūrimas...")
@@ -24,7 +23,7 @@ dummy_labels = [0, 1, 2, 3, 0]  # Sukuriamos atsitiktinės klasės
 dummy_dataset = list(zip(dummy_data, dummy_labels))  # Sudaromas porų sąrašų duomenų rinkinys
 
 # Išsaugojimas į MySQL
-save_to_mysql(dummy_dataset, "test_images")  # Duomenys išsaugomi į MySQL lentelę "test_images"
+save_to_mysql("test_images", dummy_data, dummy_labels)  # Duomenys išsaugomi į MySQL lentelę "test_images"
 
 # Nuskaitymas iš MySQL
 X, y = load_from_mysql("test_images")  # Duomenys nuskaitomi iš MySQL
@@ -34,9 +33,8 @@ print(f"Įkelti duomenys: {len(X)}, Žymenys: {len(y)}")
 print("Testuojamas TensorFlow modelio treniravimas...")
 X_tf = tf.random.uniform((10, 128, 128, 3))  # Sukuriami atsitiktiniai TensorFlow duomenys
 y_tf = tf.random.uniform((10,), minval=0, maxval=4, dtype=tf.int32)  # Sukuriamos atsitiktinės TensorFlow klasės
-y_tf_categorical = to_categorical(y_tf, num_classes=4)
 
-history = tf_model.train(X_tf[:8], y_tf_categorical[:8], X_tf[8:], y_tf_categorical[8:], epochs=3, batch_size=2)
+history = tf_model.train(X_tf[:8], y_tf[:8], X_tf[8:], y_tf[8:], epochs=3, batch_size=2)
 print("TensorFlow treniravimas baigtas.")
 
 # 5. Testuojamas PyTorch metrikų skaičiavimas

@@ -14,9 +14,15 @@ class Net(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, padding=1),  # Išvestis: [batch_size, 64, 64, 64]
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),  # Išvestis: [batch_size, 64, 32, 32]
-            nn.Flatten()  # Išvestis: [batch_size, 64 * 32 * 32 = 65536]
+            nn.Flatten(),  # Išvestis: [batch_size, 64 * 32 * 32 = 65536]
+            nn.Dropout(p=0.5)  # Dropout, kad sumažintume persimokymą
         )
-        self.classifier = nn.Linear(64 * 32 * 32, num_classes)  # Klasifikatoriaus sluoksnis
+        self.classifier = nn.Sequential(
+            nn.Linear(64 * 32 * 32, 128),  # Tarpinis sluoksnis
+            nn.ReLU(),
+            nn.Dropout(p=0.7),  # Aukštesnis dropout koeficientas klasifikatoriuje
+            nn.Linear(128, num_classes)  # Išvestis: [batch_size, num_classes]
+        )
         self.printed = False  # Inicializuojame atributą, kad išvengtume klaidų
 
     def forward(self, x):

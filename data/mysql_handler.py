@@ -19,22 +19,22 @@ def connect_to_mysql():
 # Duomenų įrašymas į MySQL
 def save_to_mysql(table_name, data, labels):
     """
-    Įrašo vaizdų duomenis ir jų klases į MySQL lentelę.
-    
-    Argumentai:
-    - table_name (str): Lentelės, į kurią įrašomi duomenys, pavadinimas.
-    - data (list): Vaizdų duomenys kaip numpy masyvai.
-    - labels (list): Kiekvienam vaizdui priskirtos klasės.
+    Išsaugo duomenų rinkinį MySQL lentelėje.
+    :param table_name: Lentelės pavadinimas.
+    :param data: Duomenų rinkinys (PyTorch tensoriai).
+    :param labels: Duomenų žymenys (klasės).
     """
     conn = connect_to_mysql()
     cursor = conn.cursor()
-    
-    # SQL užklausa su apsauga nuo SQL injekcijų
-    query = f'INSERT INTO {table_name} (image_data, label) VALUES (%s, %s)'
-    
+
+    # SQL užklausa, skirta įrašyti duomenis
+    query = f"INSERT INTO {table_name} (image_data, label) VALUES (%s, %s)"
+
     for img, label in zip(data, labels):
-        cursor.execute(query, (img.tobytes(), int(label)))
-    
+        # Konvertuoja PyTorch tensorių į NumPy masyvą ir tada į baitus
+        img_bytes = img.numpy().astype(np.uint8).tobytes()  # Konvertuojama į uint8
+        cursor.execute(query, (img_bytes, int(label)))  # Įrašoma į MySQL
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -42,30 +42,34 @@ def save_to_mysql(table_name, data, labels):
 
 # Duomenų nuskaitymas iš MySQL
 def load_from_mysql(table_name):
-    """
-    Nuskaito vaizdų duomenis ir jų klases iš MySQL lentelės.
-    
-    Argumentai:
-    - table_name (str): Lentelės, iš kurios duomenys nuskaitomi, pavadinimas.
-    
-    Grąžina:
-    - images (torch.Tensor): Tensor formato vaizdai (N x C x H x W).
-    - labels (torch.Tensor): Tensor formato žymės.
-    """
     conn = connect_to_mysql()
     cursor = conn.cursor()
-    cursor.execute(f'SELECT image_data, label FROM {table_name}')
+
+    # SQL užklausa norint gauti visus duomenis
+    cursor.execute(f"SELECT image_data, label FROM {table_name}")
     rows = cursor.fetchall()
-    
+
     images, labels = [], []
     for row in rows:
-        # Binarinio formato dekodavimas ir normalizacija
-        img = np.frombuffer(row[0], dtype=np.uint8).reshape(128, 128, 3) / 255.0
-        images.append(torch.tensor(img, dtype=torch.float32).permute(2, 0, 1))
-        labels.append(row[1])
-    
+        # Debug: Patikrinkite atminties dydį
+        print(f"Reading raw data size: {len(row[0])} bytes, label: {row[1]}")
+
+        try:
+            # Pabandykite nuskaityti ir pertvarkyti duomenis
+            img = np.frombuffer(row[0], dtype=np.uint8)  # Skaitykite kaip uint8
+            if img.size == 128 * 128 * 3:  # Tikėtinas dydis
+                img = img.reshape(128, 128, 3)
+            else:
+                raise ValueError(f"Unexpected image size: {img.size} bytes")
+
+            img = torch.tensor(img, dtype=torch.float32).permute(2, 0, 1) / 255.0  # Normalizavimas
+            images.append(img)
+            labels.append(row[1])
+        except Exception as e:
+            print(f"Error processing row: {e}")
+            continue
+
     cursor.close()
     conn.close()
-    
-    print(f"Nuskaityti {len(images)} įrašai iš lentelės '{table_name}'.")
+
     return torch.stack(images), torch.tensor(labels)

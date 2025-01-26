@@ -1,5 +1,19 @@
+import os
 import torch
 from torchmetrics.classification import Accuracy, Precision, Recall
+
+def calculate_dataset_size(directory):
+    """
+    Apskaičiuoja bendrą katalogo dydį (MB).
+    :param directory: Katalogo kelias.
+    :return: Dydis MB.
+    """
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for filename in filenames:
+            file_path = os.path.join(dirpath, filename)
+            total_size += os.path.getsize(file_path)
+    return total_size / (1024 * 1024)  # Konvertuoja į MB
 
 def calculate_metrics(preds, labels, num_classes):
     """
