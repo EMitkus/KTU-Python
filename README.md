@@ -90,10 +90,20 @@ Treniravimo metu sugeneruojami rezultatai (nuostolių grafikai ir tikslumo metri
 3.Grafikai pateikiami pagal duomenų rinkinio dydžius (50%, 75%, 100%).
 
 ## Pasiekimai:
-1.Sėkmingai įgyvendinti TensorFlow ir PyTorch modeliai.
-2.Duomenų įkėlimas ir išsaugojimas naudojant MySQL.
-3.Ankstyvo sustabdymo (early stopping) ir svorių reguliavimo (weight decay) įdiegimas.
-4.Vizualizacijos ir rezultatų analizė pagal duomenų rinkinio dydį.
+###Sėkmingai įgyvendinti TensorFlow ir PyTorch modeliai.
+  1.TensorFlow stabiliai treniravosi, tačiau validacijos nuostoliai linko didėti ankstyvesnėse epochose. Ankstyvas sustabdymas pagerino šio modelio našumą.
+  2.PyTorch modelis pasiekė geresnį tikslumą, mažesnius validacijos nuostolius ir demonstravo lankstumą su mažesniais duomenų rinkiniais.
+###2.Našumo duomenys:
+  PyTorch modeliai:
+  1.50% duomenų: Treniravimo laikas – 175.56s, tikslumas – 80% (validacija).
+  2.75% duomenų: Treniravimo laikas – 302.50s, tikslumas – 82% (validacija).
+  3.100% duomenų: Treniravimo laikas – 455.57s, tikslumas – 85% (validacija).
+  TensorFlow modelis:
+  Stabilumas prastesnis didėjant duomenų apimčiai. Tikslumas siekė apie 70% (validacija).
+###3.MySQL integracija:
+  1.Efektyviai saugomi ir atkuriami dideli duomenų rinkiniai, siekiant supaprastinti treniravimo ir testavimo procesus.
+###4.Vizualizacija:
+  1.Treniruojamųjų ir validacijos nuostolių grafikai rodo modelių optimizaciją per epohas. Pvz., PyTorch rodo aiškų pertreniravimo vengimą.
 
 ## Naudoti Duomenys:
 Šis projektas naudoja Alzheimer MRI duomenų rinkinį iš Kaggle: Alzheimer MRI Dataset (99% Accuracy) https://www.kaggle.com/datasets/lukechugh/best-alzheimer-mri-dataset-99-accuracy
@@ -101,3 +111,25 @@ Treniravimo metu sugeneruojami rezultatai (nuostolių grafikai ir tikslumo metri
 ### Duomenų struktūra:
     train/: Treniruojamoji duomenų dalis, suskirstyta į potinklius pagal klases (pvz., "Mild Impairment", "Moderate Impairment").
     test/: Testuojamoji duomenų dalis, suskirstyta taip pat kaip ir treniravimo dalis.
+
+## Rekomendacijos Ateičiai
+### Didesni duomenų rinkiniai:
+  Alzheimerio diagnostikai pasiekti dar didesnį tikslumą galima bandyti naudoti įvairesnius ir didesnius MRI duomenų rinkinius.
+### Modelių pritaikymas kitoms sritims:
+  CNN architektūra gali būti lengvai adaptuota kitiems medicininiams vaizdams analizuoti (pvz., vėžio diagnostikai).
+### Hiperparametrų optimizavimas:
+  Naudoti algoritmus, kaip Grid Search ar Bayesian Optimization, siekiant rasti optimalius mokymosi koeficientus, partijos dydžius ir Dropout reikšmes.
+### Įtraukti daugiau metrikų:
+  Pvz., ROC kreivės, F1-score metrikos padėtų geriau įvertinti modelių veikimą esant nesubalansuotiems duomenims.
+
+## Vizualizacijos
+### Projekto testavimo nuostoliai:
+![Test_project](images/Test_project.png)
+### TensorFlow nuostoliai:
+![TensorFlow Nuostoliai](images/TensorFlow%20Nuostoliai.png)
+### PyTorch nuostoliai (50%):
+![PyTorch 50%](images/PyTorch%2050%25.png)
+### PyTorch nuostoliai (75%):
+![PyTorch 75%](images/PyTorch%2075%25.png)
+### PyTorch nuostoliai (100%):
+![PyTorch 100%](images/PyTorch%20100%25.png)
