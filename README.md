@@ -133,3 +133,6 @@ Treniravimo metu sugeneruojami rezultatai (nuostolių grafikai ir tikslumo metri
 ![PyTorch 75%](images/PyTorch%2075%25.png)
 ### PyTorch nuostoliai (100%):
 ![PyTorch 100%](images/PyTorch%20100%25.png)
+
+## Išvados:
+Projektas parodė giluminio mokymosi modelių pritaikymo Alzheimerio diagnostikai galimybes. PyTorch pasižymėjo našumu ir mažesniais nuostoliais, o TensorFlow išlaikė paprastesnę architektūrą su stabiliais rezultatais. Ateityje galima plėsti funkcionalumą pritaikant naujas metrikas ir įtraukiant didesnius duomenų rinkinius.
